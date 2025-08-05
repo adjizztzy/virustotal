@@ -6,15 +6,19 @@ let currentTab = 2;
 function login() {
     const user = document.getElementById("username").value;
     const pass = document.getElementById("password").value;
+    const errorElement = document.getElementById("loginError");
+
     if (user === usernameCorrect && pass === passwordCorrect) {
+        // Sembunyikan halaman login, tampilkan dashboard
         document.getElementById("loginPage").classList.remove("active");
         document.getElementById("dashboardPage").classList.add("active");
-        showTab(2); // Start at Connection tab
+        showTab(2);
+        errorElement.textContent = ""; // Hapus pesan error jika login berhasil
     } else {
-        document.getElementById("loginError").textContent = "Invalid credentials!";
+        // Tampilkan pesan error
+        errorElement.textContent = "Username atau password salah!";
     }
-}
-
+            }
 // TOGGLE MENU
 function toggleMenu() {
     const menu = document.getElementById("tabMenu");
