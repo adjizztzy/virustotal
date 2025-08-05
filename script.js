@@ -14,74 +14,99 @@ function fetchWithKey(endpoint, options = {}) {
 }
 
 // =======================
-// Login dan Navigasi
+// Main Script
 // =======================
 document.addEventListener("DOMContentLoaded", () => {
-    const passwordCorrect = "1234"; // hanya password
-    let currentTab = 2;
+    const passwordCorrect = "1234"; // password saja
 
-    // Login hanya pakai password
-    document.getElementById("loginButton").addEventListener("click", () => {
-        const pass = document.getElementById("password").value;
-        const errorElement = document.getElementById("loginError");
+    // LOGIN
+    const loginBtn = document.getElementById("loginButton");
+    if (loginBtn) {
+        loginBtn.addEventListener("click", () => {
+            const pass = document.getElementById("password").value;
+            const errorElement = document.getElementById("loginError");
 
-        if (pass === passwordCorrect) {
-            document.getElementById("loginPage").classList.remove("active");
-            document.getElementById("dashboardPage").classList.add("active");
-            showTab(2);
-            errorElement.textContent = "";
-        } else {
-            errorElement.textContent = "Password salah!";
-        }
-    });
+            if (pass === passwordCorrect) {
+                const loginPage = document.getElementById("loginPage");
+                const dashboardPage = document.getElementById("dashboardPage");
 
-    // Menu navigasi
-    document.getElementById("menuButton").addEventListener("click", () => {
-        const menu = document.getElementById("tabMenu");
-        menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-    });
+                if (loginPage && dashboardPage) {
+                    loginPage.classList.remove("active");
+                    dashboardPage.classList.add("active");
+                }
 
+                if (typeof showTab === "function") {
+                    showTab(2);
+                } else {
+                    console.warn("showTab() tidak ditemukan");
+                }
+
+                if (errorElement) errorElement.textContent = "";
+            } else {
+                if (errorElement) errorElement.textContent = "Password salah!";
+            }
+        });
+    }
+
+    // TAB NAVIGATION
     window.showTab = function(tab) {
-        document.getElementById("tab1").classList.remove("active");
-        document.getElementById("tab2").classList.remove("active");
-        document.getElementById(`tab${tab}`).classList.add("active");
-        currentTab = tab;
+        const tab1 = document.getElementById("tab1");
+        const tab2 = document.getElementById("tab2");
+
+        if (tab1 && tab2) {
+            tab1.classList.remove("active");
+            tab2.classList.remove("active");
+            const activeTab = document.getElementById(`tab${tab}`);
+            if (activeTab) activeTab.classList.add("active");
+        }
     };
 
-    // =======================
-    // Fitur WhatsApp
-    // =======================
+    const menuBtn = document.getElementById("menuButton");
+    if (menuBtn) {
+        menuBtn.addEventListener("click", () => {
+            const menu = document.getElementById("tabMenu");
+            if (menu) {
+                menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+            }
+        });
+    }
 
-    // Tombol Connect WhatsApp
-    document.getElementById("connectButton").addEventListener("click", () => {
-        fetchWithKey('/connect', { method: 'POST' })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message || "Terhubung ke WhatsApp");
-                checkStatus(); // cek ulang status setelah connect
+    // CONNECT WHATSAPP
+    const connectBtn = document.getElementById("connectButton");
+    if (connectBtn) {
+        connectBtn.addEventListener("click", () => {
+            fetchWithKey('/connect', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || "Terhubung ke WhatsApp");
+                    checkStatus();
+                })
+                .catch(() => alert("Gagal menghubungkan ke WhatsApp (backend tidak merespon)"));
+        });
+    }
+
+    // SEND CRASH
+    const crashBtn = document.getElementById("sendCrashButton");
+    if (crashBtn) {
+        crashBtn.addEventListener("click", () => {
+            const number = document.getElementById("targetNumber").value;
+            fetchWithKey('/send-message', {
+                method: 'POST',
+                body: JSON.stringify({ number })
             })
-            .catch(() => alert("Gagal menghubungkan ke WhatsApp (backend tidak merespon)"));
-    });
+                .then(res => res.json())
+                .then(data => {
+                    const result = document.getElementById("resultMessage");
+                    if (result) result.textContent = data.message || data.error;
+                })
+                .catch(() => {
+                    const result = document.getElementById("resultMessage");
+                    if (result) result.textContent = "Gagal mengirim pesan. Backend tidak merespons.";
+                });
+        });
+    }
 
-    // Tombol Kirim Pesan / Crash
-    document.getElementById("sendCrashButton").addEventListener("click", () => {
-        const number = document.getElementById("targetNumber").value;
-        fetchWithKey('/send-message', {
-            method: 'POST',
-            body: JSON.stringify({ number })
-        })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById("resultMessage").textContent = data.message || data.error;
-            })
-            .catch(() => {
-                document.getElementById("resultMessage").textContent = "Gagal mengirim pesan. Backend tidak merespons.";
-            });
-    });
-
-    // =======================
-    // Status Otomatis
-    // =======================
+    // STATUS CHECK
     function checkStatus() {
         fetchWithKey('/status')
             .then(res => res.json())
@@ -89,21 +114,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 const circle = document.getElementById("statusCircle");
                 const text = document.getElementById("statusText");
                 if (data.connected) {
-                    circle.classList.remove("red");
-                    circle.classList.add("green");
-                    text.textContent = "Connected";
+                    if (circle) {
+                        circle.classList.remove("red");
+                        circle.classList.add("green");
+                    }
+                    if (text) text.textContent = "Connected";
                 } else {
-                    circle.classList.remove("green");
-                    circle.classList.add("red");
-                    text.textContent = "Not Connected";
+                    if (circle) {
+                        circle.classList.remove("green");
+                        circle.classList.add("red");
+                    }
+                    if (text) text.textContent = "Not Connected";
                 }
             })
             .catch(() => {
                 const circle = document.getElementById("statusCircle");
                 const text = document.getElementById("statusText");
-                circle.classList.remove("green");
-                circle.classList.add("red");
-                text.textContent = "Backend Tidak Tersedia";
+                if (circle) {
+                    circle.classList.remove("green");
+                    circle.classList.add("red");
+                }
+                if (text) text.textContent = "Backend Tidak Tersedia";
             });
     }
 
