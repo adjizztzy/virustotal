@@ -16,8 +16,33 @@
         <button id="loginButton">Login</button>
         <p id="loginError" class="error"></p>
     </div>
+</div>
+
+<div id="dashboardPage" class="page">
+    <nav>
+        <div class="menu" id="menuButton">☰</div>
+        <div class="tabs" id="tabMenu">
+            <button onclick="showTab(1)">Sender</button>
+            <button onclick="showTab(2)">Connection</button>
+        </div>
+    </nav>
+
+    <div id="tab1" class="tab">
+        <h2>Send Crash to Target</h2>
+        <input type="text" id="targetNumber" placeholder="Enter number">
+        <button id="sendCrashButton">Send Crash</button>
+        <p id="resultMessage"></p>
     </div>
 
+    <div id="tab2" class="tab active">
+        <h2>WhatsApp Connection</h2>
+        <div class="status">
+            <div id="statusCircle" class="circle red"></div>
+            <span id="statusText">Not Connected</span>
+        </div>
+        <button id="connectButton">Connect WhatsApp</button>
+    </div>
+</div>
     <!-- DASHBOARD -->
     <div id="dashboardPage" class="page">
         <nav>
