@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Control Panel</title>
+    <title>Tenshi Panel</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- LOGIN SCREEN -->
     <div id="loginPage" class="page active">
         <div class="login-box">
-            <h2>Login</h2>
+            <h1>Galaxy Panel</h1>
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
-            <button onclick="login()">Login</button>
+            <button id="loginButton">Login</button>
             <p id="loginError" class="error"></p>
         </div>
     </div>
@@ -21,7 +21,7 @@
     <!-- DASHBOARD -->
     <div id="dashboardPage" class="page">
         <nav>
-            <div class="menu" onclick="toggleMenu()">☰</div>
+            <div class="menu" id="menuButton">☰</div>
             <div class="tabs" id="tabMenu">
                 <button onclick="showTab(1)">Sender</button>
                 <button onclick="showTab(2)">Connection</button>
@@ -30,9 +30,9 @@
 
         <!-- TAB 1: Sender -->
         <div id="tab1" class="tab">
-            <h2>Send to Target</h2>
+            <h2>Send Crash to Target</h2>
             <input type="text" id="targetNumber" placeholder="Enter number (e.g., 628123456789)">
-            <button onclick="sendCrash()">Send Crash</button>
+            <button id="sendCrashButton">Send Crash</button>
             <p id="resultMessage"></p>
         </div>
 
@@ -43,7 +43,7 @@
                 <div id="statusCircle" class="circle red"></div>
                 <span id="statusText">Not Connected</span>
             </div>
-            <button onclick="connectWhatsApp()">Connect WhatsApp</button>
+            <button id="connectButton">Connect WhatsApp</button>
         </div>
     </div>
 
