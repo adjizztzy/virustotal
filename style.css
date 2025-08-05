@@ -1,8 +1,8 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
-    color: #333;
+    background: radial-gradient(circle at center, #0a0f2c, #000);
+    color: white;
 }
 
 .page {
@@ -17,36 +17,51 @@ body {
 }
 
 .login-box {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background: rgba(20, 20, 50, 0.9);
+    padding: 40px;
+    border-radius: 15px;
     text-align: center;
+    box-shadow: 0 0 25px rgba(0, 150, 255, 0.7);
+}
+
+.login-box h1 {
+    margin-bottom: 20px;
+    color: #00aaff;
+    text-shadow: 0 0 10px #00aaff;
 }
 
 .login-box input {
     display: block;
-    width: 200px;
+    width: 250px;
     margin: 10px auto;
-    padding: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
 }
 
 .login-box button {
-    padding: 10px 20px;
+    padding: 12px 25px;
+    background: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 0 15px #00aaff;
 }
 
 .error {
     color: red;
     margin-top: 10px;
     font-weight: bold;
-    }
+}
 
 nav {
     position: absolute;
     top: 0;
     width: 100%;
-    background: #0078ff;
+    background: #111;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -55,7 +70,7 @@ nav {
 
 .menu {
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .tabs {
@@ -73,7 +88,7 @@ nav {
 
 .tab {
     display: none;
-    margin-top: 60px;
+    margin-top: 80px;
     text-align: center;
 }
 
@@ -100,21 +115,8 @@ nav {
 
 .green {
     background: green;
-}#status {
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 20px;
 }
 
-pre {
-    text-align: left;
-    background: #fff;
-    padding: 15px;
-    margin-top: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    overflow-x: auto;
-}
+button:hover {
+    opacity: 0.8;
+    }
