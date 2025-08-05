@@ -1,40 +1,76 @@
-// API Key VirusTotal (TIDAK AMAN jika dipakai di client-side)
-const apiKey = "c2a41f2d07d65d78ce8276c4009ba885c8a30a867f3ae12067e79ba013067552";
+const usernameCorrect = "adji";
+const passwordCorrect = "adji";
+let currentTab = 2;
 
-// Deteksi IP pengguna secara real time
-fetch('https://api.ipify.org?format=json')
+// LOGIN FUNCTION
+function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    if (user === usernameCorrect && pass === passwordCorrect) {
+        document.getElementById("loginPage").classList.remove("active");
+        document.getElementById("dashboardPage").classList.add("active");
+        showTab(2); // Start at Connection tab
+    } else {
+        document.getElementById("loginError").textContent = "Invalid credentials!";
+    }
+}
+
+// TOGGLE MENU
+function toggleMenu() {
+    const menu = document.getElementById("tabMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+
+// SHOW TAB
+function showTab(tab) {
+    document.getElementById("tab1").classList.remove("active");
+    document.getElementById("tab2").classList.remove("active");
+    document.getElementById(`tab${tab}`).classList.add("active");
+    currentTab = tab;
+}
+
+// CONNECT WHATSAPP
+function connectWhatsApp() {
+    fetch('/connect', { method: 'POST' })
+        .then(() => checkStatus());
+}
+
+// CHECK STATUS EVERY 3 SECONDS
+function checkStatus() {
+    setInterval(() => {
+        fetch('/status')
+            .then(res => res.json())
+            .then(data => {
+                const circle = document.getElementById("statusCircle");
+                const text = document.getElementById("statusText");
+                if (data.connected) {
+                    circle.classList.remove("red");
+                    circle.classList.add("green");
+                    text.textContent = "Connected";
+                    if (currentTab === 2) showTab(1);
+                } else {
+                    circle.classList.remove("green");
+                    circle.classList.add("red");
+                    text.textContent = "Not Connected";
+                }
+            });
+    }, 3000);
+}
+checkStatus();
+
+// SEND CRASH
+function sendCrash() {
+    const number = document.getElementById("targetNumber").value;
+    fetch('/crash', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ number })
+    })
     .then(res => res.json())
     .then(data => {
-        document.getElementById("my-ip").textContent = data.ip;
-    })
-    .catch(() => {
-        document.getElementById("my-ip").textContent = "Gagal mendeteksi IP";
+        document.getElementById("resultMessage").textContent = data.message || data.error;
     });
-
-// Event untuk tombol cek domain
-document.getElementById("cekBtn").addEventListener("click", cekDomain);
-
-async function cekDomain() {
-    const domain = document.getElementById("domain").value.trim();
-    if (!domain) {
-        alert("Masukkan domain terlebih dahulu!");
-        return;
-    }
-
-    document.getElementById("status").textContent = "Memeriksa...";
-    document.getElementById("hasil").textContent = "";
-
-    try {
-        const response = await fetch(`https://www.virustotal.com/api/v3/domains/${domain}`, {
-            headers: { "x-apikey": apiKey }
-        });
-
-        if (!response.ok) throw new Error("Gagal mengambil data dari VirusTotal");
-
-        const data = await response.json();
-        const stats = data.data.attributes.last_analysis_stats;
-
-        // Tentukan status keamanan
+}        // Tentukan status keamanan
         let statusKeamanan;
         if (stats.malicious > 0) {
             statusKeamanan = "⚠️ Berbahaya!";
