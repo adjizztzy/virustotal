@@ -4,32 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenshi crash</title>
-    <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(circle at center, #0a0f2c, #000); color: white; }
-        .page { display: none; height: 100vh; justify-content: center; align-items: center; }
-        .page.active { display: flex; }
-        .login-box { background: rgba(20, 20, 50, 0.9); padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 0 25px rgba(0, 150, 255, 0.7); }
-        .login-box h1 { margin-bottom: 20px; color: #00aaff; text-shadow: 0 0 10px #00aaff; }
-        .login-box input { display: block; width: 250px; margin: 10px auto; padding: 12px; border: none; border-radius: 5px; outline: none; }
-        .login-box button { padding: 12px 25px; background: #00aaff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; box-shadow: 0 0 15px #00aaff; }
-        .error { color: red; margin-top: 10px; font-weight: bold; }
-        nav { position: absolute; top: 0; width: 100%; background: #111; color: white; display: flex; justify-content: space-between; padding: 10px; }
-        .menu { cursor: pointer; font-size: 24px; }
-        .tabs { display: none; }
-        .tabs button { background: none; border: none; color: white; font-size: 16px; margin: 0 10px; cursor: pointer; }
-        .tab { display: none; margin-top: 80px; text-align: center; }
-        .tab.active { display: block; }
-        .status { display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .circle { width: 20px; height: 20px; border-radius: 50%; }
-        .red { background: red; }
-        .green { background: green; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- LOGIN -->
     <div id="loginPage" class="page active">
         <div class="login-box">
-            <h1>ohayogozaimasu Tanshi crash</h1>
+            <h1>ohayogozaimasu Tenshi crash</h1>
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
             <button id="loginButton">Login</button>
@@ -64,95 +45,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("Script loaded!");
-
-            const usernameCorrect = "admin";
-            const passwordCorrect = "1234";
-            let currentTab = 2;
-
-            document.getElementById("loginButton").addEventListener("click", () => {
-                const user = document.getElementById("username").value;
-                const pass = document.getElementById("password").value;
-                const errorElement = document.getElementById("loginError");
-
-                if (user === usernameCorrect && pass === passwordCorrect) {
-                    document.getElementById("loginPage").classList.remove("active");
-                    document.getElementById("dashboardPage").classList.add("active");
-                    showTab(2);
-                    errorElement.textContent = "";
-                } else {
-                    errorElement.textContent = "Username atau password salah!";
-                }
-            });
-
-            document.getElementById("menuButton").addEventListener("click", () => {
-                const menu = document.getElementById("tabMenu");
-                menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-            });
-
-            window.showTab = function(tab) {
-                document.getElementById("tab1").classList.remove("active");
-                document.getElementById("tab2").classList.remove("active");
-                document.getElementById(`tab${tab}`).classList.add("active");
-                currentTab = tab;
-            };
-
-            document.getElementById("connectButton").addEventListener("click", () => {
-                fetch('/connect', { method: 'POST' }).then(() => checkStatusOnce());
-            });
-
-            document.getElementById("sendCrashButton").addEventListener("click", () => {
-                const number = document.getElementById("targetNumber").value;
-                fetch('/crash', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ number })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById("resultMessage").textContent = data.message || data.error;
-                });
-            });
-
-            function checkStatusOnce() {
-                fetch('/status')
-                    .then(res => res.json())
-                    .then(data => {
-                        const circle = document.getElementById("statusCircle");
-                        const text = document.getElementById("statusText");
-                        if (data.connected) {
-                            circle.classList.remove("red");
-                            circle.classList.add("green");
-                            text.textContent = "Connected";
-                            showTab(1);
-                        } else {
-                            circle.classList.remove("green");
-                            circle.classList.add("red");
-                            text.textContent = "Not Connected";
-                        }
-                    });
-            }
-
-            setInterval(() => {
-                fetch('/status')
-                    .then(res => res.json())
-                    .then(data => {
-                        const circle = document.getElementById("statusCircle");
-                        const text = document.getElementById("statusText");
-                        if (data.connected) {
-                            circle.classList.remove("red");
-                            circle.classList.add("green");
-                            text.textContent = "Connected";
-                        } else {
-                            circle.classList.remove("green");
-                            circle.classList.add("red");
-                            text.textContent = "Not Connected";
-                        }
-                    });
-            }, 3000);
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
-    </html>
+</html>
