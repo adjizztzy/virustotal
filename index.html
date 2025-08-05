@@ -1,27 +1,52 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenshi</title>
+    <title>WhatsApp Control Panel</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Cek Keamanan Domain & IP Real Time</h1>
-
-    <div class="card">
-        <h2>IP Address Anda:</h2>
-        <p id="my-ip">Mendeteksi...</p>
+    <!-- LOGIN SCREEN -->
+    <div id="loginPage" class="page active">
+        <div class="login-box">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <p id="loginError" class="error"></p>
+        </div>
     </div>
 
-    <div class="card">
-        <h2>Cek Keamanan Domain</h2>
-        <input type="text" id="domain" placeholder="contoh.com">
-        <button id="cekBtn">Cek</button>
-        <div id="status">Status keamanan akan muncul di sini...</div>
-        <pre id="hasil">Hasil analisis akan muncul di sini...</pre>
+    <!-- DASHBOARD -->
+    <div id="dashboardPage" class="page">
+        <nav>
+            <div class="menu" onclick="toggleMenu()">☰</div>
+            <div class="tabs" id="tabMenu">
+                <button onclick="showTab(1)">Sender</button>
+                <button onclick="showTab(2)">Connection</button>
+            </div>
+        </nav>
+
+        <!-- TAB 1: Sender -->
+        <div id="tab1" class="tab">
+            <h2>Send to Target</h2>
+            <input type="text" id="targetNumber" placeholder="Enter number (e.g., 628123456789)">
+            <button onclick="sendCrash()">Send Crash</button>
+            <p id="resultMessage"></p>
+        </div>
+
+        <!-- TAB 2: Connection -->
+        <div id="tab2" class="tab active">
+            <h2>WhatsApp Connection</h2>
+            <div class="status">
+                <div id="statusCircle" class="circle red"></div>
+                <span id="statusText">Not Connected</span>
+            </div>
+            <button onclick="connectWhatsApp()">Connect WhatsApp</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-      </html>
+                </html>
