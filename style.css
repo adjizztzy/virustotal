@@ -1,40 +1,104 @@
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f8fb;
-    text-align: center;
-    padding: 20px;
+    background: #f2f2f2;
+    color: #333;
 }
 
-.card {
-    background: #fff;
-    padding: 20px;
-    margin: 20px auto;
+.page {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.page.active {
+    display: flex;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    text-align: center;
 }
 
-input {
+.login-box input {
+    display: block;
+    width: 200px;
+    margin: 10px auto;
     padding: 10px;
-    width: 70%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 }
 
-button {
+.login-box button {
     padding: 10px 20px;
-    background-color: #2b6cb0;
-    color: white;
-    border: none;
     cursor: pointer;
-    border-radius: 5px;
 }
 
-button:hover {
-    background-color: #2c5282;
+.error {
+    color: red;
 }
 
-#status {
+nav {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: #0078ff;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.menu {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.tabs {
+    display: none;
+}
+
+.tabs button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.tab {
+    display: none;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.tab.active {
+    display: block;
+}
+
+.status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.red {
+    background: red;
+}
+
+.green {
+    background: green;
+}#status {
     font-size: 18px;
     font-weight: bold;
     margin-top: 20px;
