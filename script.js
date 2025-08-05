@@ -1,60 +1,27 @@
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Frontend loaded!");
+// =======================
+// Konfigurasi Backend
+// =======================
+const BACKEND_URL = "http://IP_SERVER:PORT"; // Ganti dengan URL backend kamu
+const API_KEY = "secret123"; // Sama seperti di backend
 
+function fetchWithKey(endpoint, options = {}) {
+    options.headers = {
+        ...options.headers,
+        "x-api-key": API_KEY,
+        "Content-Type": "application/json"
+    };
+    return fetch(`${BACKEND_URL}${endpoint}`, options);
+}
+
+// =======================
+// Login dan Navigasi
+// =======================
+document.addEventListener("DOMContentLoaded", () => {
     const usernameCorrect = "admin";
     const passwordCorrect = "1234";
-    let isConnected = false;
-    let backendAvailable = false;
+    let currentTab = 2;
 
-    // ------------------ CEK BACKEND OTOMATIS ------------------
-    function checkBackend() {
-        fetch("/status")
-            .then(res => res.json())
-            .then(data => {
-                backendAvailable = true;
-                if (data.connected) {
-                    isConnected = true;
-                    updateStatus(true);
-                } else {
-                    isConnected = false;
-                    updateStatus(false);
-                }
-            })
-            .catch(() => {
-                backendAvailable = false;
-                isConnected = false;
-                updateStatus(false);
-            });
-    }
-
-    // Jalankan cek backend setiap 3 detik
-    setInterval(checkBackend, 3000);
-    checkBackend();
-
-    // ------------------ UPDATE STATUS UI ------------------
-    function updateStatus(connected) {
-        const circle = document.getElementById("statusCircle");
-        const text = document.getElementById("statusText");
-
-        if (!backendAvailable) {
-            circle.classList.remove("green");
-            circle.classList.add("red");
-            text.textContent = "Backend Tidak Tersedia";
-            return;
-        }
-
-        if (connected) {
-            circle.classList.remove("red");
-            circle.classList.add("green");
-            text.textContent = "Connected";
-        } else {
-            circle.classList.remove("green");
-            circle.classList.add("red");
-            text.textContent = "Not Connected";
-        }
-    }
-
-    // ------------------ LOGIN ------------------
+    // Login
     document.getElementById("loginButton").addEventListener("click", () => {
         const user = document.getElementById("username").value;
         const pass = document.getElementById("password").value;
@@ -70,67 +37,77 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ------------------ TOGGLE MENU ------------------
+    // Menu navigasi
     document.getElementById("menuButton").addEventListener("click", () => {
         const menu = document.getElementById("tabMenu");
         menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     });
 
-    // ------------------ SWITCH TAB ------------------
     window.showTab = function(tab) {
         document.getElementById("tab1").classList.remove("active");
         document.getElementById("tab2").classList.remove("active");
         document.getElementById(`tab${tab}`).classList.add("active");
+        currentTab = tab;
     };
 
-    // ------------------ CONNECT BUTTON ------------------
-    document.getElementById("connectButton").addEventListener("click", () => {
-        if (!backendAvailable) {
-            alert("Backend tidak tersedia. Pastikan server berjalan.");
-            return;
-        }
+    // =======================
+    // Fitur WhatsApp
+    // =======================
 
-        fetch("/connect", { method: "POST" })
+    // Tombol Connect WhatsApp
+    document.getElementById("connectButton").addEventListener("click", () => {
+        fetchWithKey('/connect', { method: 'POST' })
             .then(res => res.json())
             .then(data => {
                 alert(data.message || "Terhubung ke WhatsApp");
-                checkBackend();
+                checkStatus(); // Cek ulang status setelah connect
             })
-            .catch(() => {
-                alert("Gagal menghubungkan ke WhatsApp (backend tidak merespon)");
-            });
+            .catch(() => alert("Gagal menghubungkan ke WhatsApp (backend tidak merespon)"));
     });
 
-    // ------------------ SEND CRASH BUTTON ------------------
+    // Tombol Kirim Pesan / Crash
     document.getElementById("sendCrashButton").addEventListener("click", () => {
         const number = document.getElementById("targetNumber").value;
-
-        if (!backendAvailable) {
-            alert("Backend tidak tersedia. Tidak ada sender aktif.");
-            return;
-        }
-
-        if (!isConnected) {
-            alert("WhatsApp belum connect.");
-            return;
-        }
-
-        if (!number) {
-            alert("Masukkan nomor target.");
-            return;
-        }
-
-        fetch("/send-message", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        fetchWithKey('/send-message', {
+            method: 'POST',
             body: JSON.stringify({ number })
         })
             .then(res => res.json())
             .then(data => {
-                document.getElementById("resultMessage").textContent = data.message || "Pesan berhasil dikirim";
+                document.getElementById("resultMessage").textContent = data.message || data.error;
             })
             .catch(() => {
-                document.getElementById("resultMessage").textContent = "Gagal mengirim pesan (backend tidak merespon)";
+                document.getElementById("resultMessage").textContent = "Gagal mengirim pesan. Backend tidak merespons.";
             });
     });
+
+    // =======================
+    // Status Otomatis
+    // =======================
+    function checkStatus() {
+        fetchWithKey('/status')
+            .then(res => res.json())
+            .then(data => {
+                const circle = document.getElementById("statusCircle");
+                const text = document.getElementById("statusText");
+                if (data.connected) {
+                    circle.classList.remove("red");
+                    circle.classList.add("green");
+                    text.textContent = "Connected";
+                } else {
+                    circle.classList.remove("green");
+                    circle.classList.add("red");
+                    text.textContent = "Not Connected";
+                }
+            })
+            .catch(() => {
+                const circle = document.getElementById("statusCircle");
+                const text = document.getElementById("statusText");
+                circle.classList.remove("green");
+                circle.classList.add("red");
+                text.textContent = "Backend Tidak Tersedia";
+            });
+    }
+
+    setInterval(checkStatus, 3000);
 });
