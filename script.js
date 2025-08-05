@@ -1,10 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Frontend loaded!");
 
-    // Login credentials
     const usernameCorrect = "admin";
     const passwordCorrect = "1234";
-    let currentTab = 2;
+    let isConnected = false;
+    let backendAvailable = false;
+
+    // ------------------ CEK BACKEND OTOMATIS ------------------
+    function checkBackend() {
+        fetch("/status")
+            .then(res => res.json())
+            .then(data => {
+                backendAvailable = true;
+                if (data.connected) {
+                    isConnected = true;
+                    updateStatus(true);
+                } else {
+                    isConnected = false;
+                    updateStatus(false);
+                }
+            })
+            .catch(() => {
+                backendAvailable = false;
+                isConnected = false;
+                updateStatus(false);
+            });
+    }
+
+    // Jalankan cek backend setiap 3 detik
+    setInterval(checkBackend, 3000);
+    checkBackend();
+
+    // ------------------ UPDATE STATUS UI ------------------
+    function updateStatus(connected) {
+        const circle = document.getElementById("statusCircle");
+        const text = document.getElementById("statusText");
+
+        if (!backendAvailable) {
+            circle.classList.remove("green");
+            circle.classList.add("red");
+            text.textContent = "Backend Tidak Tersedia";
+            return;
+        }
+
+        if (connected) {
+            circle.classList.remove("red");
+            circle.classList.add("green");
+            text.textContent = "Connected";
+        } else {
+            circle.classList.remove("green");
+            circle.classList.add("red");
+            text.textContent = "Not Connected";
+        }
+    }
 
     // ------------------ LOGIN ------------------
     document.getElementById("loginButton").addEventListener("click", () => {
@@ -22,38 +70,53 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ------------------ MENU ------------------
+    // ------------------ TOGGLE MENU ------------------
     document.getElementById("menuButton").addEventListener("click", () => {
         const menu = document.getElementById("tabMenu");
         menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     });
 
-    // ------------------ TAB SWITCH ------------------
+    // ------------------ SWITCH TAB ------------------
     window.showTab = function(tab) {
         document.getElementById("tab1").classList.remove("active");
         document.getElementById("tab2").classList.remove("active");
         document.getElementById(`tab${tab}`).classList.add("active");
-        currentTab = tab;
     };
 
-    // ------------------ CONNECT WHATSAPP ------------------
+    // ------------------ CONNECT BUTTON ------------------
     document.getElementById("connectButton").addEventListener("click", () => {
+        if (!backendAvailable) {
+            alert("Backend tidak tersedia. Pastikan server berjalan.");
+            return;
+        }
+
         fetch("/connect", { method: "POST" })
             .then(res => res.json())
             .then(data => {
-                alert(data.message);
-                checkStatusOnce();
+                alert(data.message || "Terhubung ke WhatsApp");
+                checkBackend();
             })
             .catch(() => {
-                alert("Gagal menghubungkan ke WhatsApp");
+                alert("Gagal menghubungkan ke WhatsApp (backend tidak merespon)");
             });
     });
 
-    // ------------------ KIRIM PESAN ------------------
+    // ------------------ SEND CRASH BUTTON ------------------
     document.getElementById("sendCrashButton").addEventListener("click", () => {
         const number = document.getElementById("targetNumber").value;
+
+        if (!backendAvailable) {
+            alert("Backend tidak tersedia. Tidak ada sender aktif.");
+            return;
+        }
+
+        if (!isConnected) {
+            alert("WhatsApp belum connect.");
+            return;
+        }
+
         if (!number) {
-            alert("Masukkan nomor target");
+            alert("Masukkan nomor target.");
             return;
         }
 
@@ -64,56 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
         })
             .then(res => res.json())
             .then(data => {
-                document.getElementById("resultMessage").textContent = data.message;
+                document.getElementById("resultMessage").textContent = data.message || "Pesan berhasil dikirim";
             })
             .catch(() => {
-                document.getElementById("resultMessage").textContent = "Gagal mengirim pesan";
+                document.getElementById("resultMessage").textContent = "Gagal mengirim pesan (backend tidak merespon)";
             });
     });
-
-    // ------------------ STATUS CEK SEKALI ------------------
-    function checkStatusOnce() {
-        fetch("/status")
-            .then(res => res.json())
-            .then(data => {
-                const circle = document.getElementById("statusCircle");
-                const text = document.getElementById("statusText");
-                if (data.connected) {
-                    circle.classList.remove("red");
-                    circle.classList.add("green");
-                    text.textContent = "Connected";
-                    showTab(1);
-                } else {
-                    circle.classList.remove("green");
-                    circle.classList.add("red");
-                    text.textContent = "Not Connected";
-                }
-            });
-    }
-
-    // ------------------ STATUS CEK OTOMATIS ------------------
-    setInterval(() => {
-        fetch("/status")
-            .then(res => res.json())
-            .then(data => {
-                const circle = document.getElementById("statusCircle");
-                const text = document.getElementById("statusText");
-                if (data.connected) {
-                    circle.classList.remove("red");
-                    circle.classList.add("green");
-                    text.textContent = "Connected";
-                } else {
-                    circle.classList.remove("green");
-                    circle.classList.add("red");
-                    text.textContent = "Not Connected";
-                }
-            })
-            .catch(() => {
-                const circle = document.getElementById("statusCircle");
-                const text = document.getElementById("statusText");
-                circle.classList.remove("green");
-                circle.classList.add("red");
-                text.textContent = "Server Error";
-            });
-    }, 3000);
 });
