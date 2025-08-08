@@ -1,122 +1,63 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at center, #0a0f2c, #000);
-    color: white;
+  font-family: sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.page {
-    display: none;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
+.chat-container {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.page.active {
-    display: flex;
+.chat-bubble {
+  max-width: 70%;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
 }
 
-.login-box {
-    background: rgba(20, 20, 50, 0.9);
-    padding: 40px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(0, 150, 255, 0.7);
+.user {
+  background-color: #daf1ff;
+  align-self: flex-end;
+  text-align: right;
 }
 
-.login-box h1 {
-    margin-bottom: 20px;
-    color: #00aaff;
-    text-shadow: 0 0 10px #00aaff;
+.bot {
+  background-color: #e4e4e4;
+  align-self: flex-start;
+  text-align: left;
 }
 
-.login-box input {
-    display: block;
-    width: 250px;
-    margin: 10px auto;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    outline: none;
+form {
+  display: flex;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
 }
 
-.login-box button {
-    padding: 12px 25px;
-    background: #00aaff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 0 15px #00aaff;
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.error {
-    color: red;
-    margin-top: 10px;
-    font-weight: bold;
+button {
+  margin-left: 10px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
-
-nav {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    background: #111;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-}
-
-.menu {
-    cursor: pointer;
-    font-size: 24px;
-}
-
-.tabs {
-    display: none;
-}
-
-.tabs button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 16px;
-    margin: 0 10px;
-    cursor: pointer;
-}
-
-.tab {
-    display: none;
-    margin-top: 80px;
-    text-align: center;
-}
-
-.tab.active {
-    display: block;
-}
-
-.status {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-.circle {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-}
-
-.red {
-    background: red;
-}
-
-.green {
-    background: green;
-}
-
-button:hover {
-    opacity: 0.8;
-    }
