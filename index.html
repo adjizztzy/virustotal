@@ -1,75 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenshi crash</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tenshi ai</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- LOGIN -->
-    <div id="loginPage" class="page active">
-    <div id="loginPage" class="page active">
-    <div class="login-box">
-        <h1>Masukkan Password</h1>
-        <input type="password" id="password" placeholder="Password">
-        <button id="loginButton">Login</button>
-        <p id="loginError" class="error"></p>
-    </div>
-</div>
-
-<div id="dashboardPage" class="page">
-    <nav>
-        <div class="menu" id="menuButton">☰</div>
-        <div class="tabs" id="tabMenu">
-            <button onclick="showTab(1)">Sender</button>
-            <button onclick="showTab(2)">Connection</button>
-        </div>
-    </nav>
-
-    <div id="tab1" class="tab">
-        <h2>Send Crash to Target</h2>
-        <input type="text" id="targetNumber" placeholder="Enter number">
-        <button id="sendCrashButton">Send Crash</button>
-        <p id="resultMessage"></p>
-    </div>
-
-    <div id="tab2" class="tab active">
-        <h2>WhatsApp Connection</h2>
-        <div class="status">
-            <div id="statusCircle" class="circle red"></div>
-            <span id="statusText">Not Connected</span>
-        </div>
-        <button id="connectButton">Connect WhatsApp</button>
-    </div>
-</div>
-    <!-- DASHBOARD -->
-    <div id="dashboardPage" class="page">
-        <nav>
-            <div class="menu" id="menuButton">☰</div>
-            <div class="tabs" id="tabMenu">
-                <button onclick="showTab(1)">Sender</button>
-                <button onclick="showTab(2)">Connection</button>
-            </div>
-        </nav>
-
-        <div id="tab1" class="tab">
-            <h2>Send Crash to Target</h2>
-            <input type="text" id="targetNumber" placeholder="Enter number (e.g., 628123456789)">
-            <button id="sendCrashButton">Send Crash</button>
-            <p id="resultMessage"></p>
-        </div>
-
-        <div id="tab2" class="tab active">
-            <h2>WhatsApp Connection</h2>
-            <div class="status">
-                <div id="statusCircle" class="circle red"></div>
-                <span id="statusText">Not Connected</span>
-            </div>
-            <button id="connectButton">Connect WhatsApp</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+  <div class="chat-container" id="chatBox"></div>
+  <form id="chatForm">
+    <input type="text" id="message" placeholder="Tulis pesan..." autocomplete="off" required />
+    <button type="submit">Kirim</button>
+  </form>
+  <script src="script.js"></script>
 </body>
 </html>
